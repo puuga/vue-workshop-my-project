@@ -31,5 +31,10 @@ export default {
 </script>
 
 <style>
-
+.red {
+    color: orangered;
+}
+.green {
+    color: green;
+}
 </style>

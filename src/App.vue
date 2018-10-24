@@ -1,6 +1,15 @@
 <template>
   <div id="app">
 
+    <AlertBar>
+      <template slot="title">
+        This is title.
+      </template>
+      <template slot="subtitle">
+        This is subtitle.
+      </template>
+    </AlertBar>
+
     <SearchBox @onSearchKeyChange="changeSearchKey"/>
 
     <TodoList :todoSorted="todoSorted"/>
@@ -14,13 +23,17 @@
 import TodoList from './components/TodoList'
 import SearchBox from './components/SearchBox'
 import AddForm from './components/AddForm'
+import ConsoleMixin from './mixins/console'
+import AlertBar from './components/AlertBar'
 
 export default {
   name: 'App',
   components: {
     TodoList,
     SearchBox,
-    AddForm
+    AddForm,
+    ConsoleMixin,
+    AlertBar
   },
   data () {
     return {
@@ -45,6 +58,7 @@ export default {
       searchKey: ''
     }
   },
+  // mixins: [ConsoleMixin],
   mounted () {
     // load saved data from local storage
     if (localStorage.todos) {

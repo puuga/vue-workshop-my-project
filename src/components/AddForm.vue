@@ -22,7 +22,8 @@ export default {
     methods: {
         async save () {
             let result = await this.$validator.validateAll() 
-            this.onSave(this.newTodo)
+            // this.onSave(this.newTodo)
+            this.$emit('onSave', this.newTodo)
             this.newTodo = ''
         }
     }

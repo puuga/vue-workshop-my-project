@@ -5,7 +5,7 @@
 
     <TodoList :todoSorted="todoSorted"/>
 
-    <AddForm :onSave="save"/>
+    <AddForm @onSave="save"/>
     
   </div>
 </template>

@@ -8,9 +8,11 @@
       </li>
     </ul>
 
-    <div>{{ newTodo }}</div>
-    <input type="text" name="" id="" v-model="newTodo" @keyup.enter="save()">
-    <button @click="save()">Save</button>
+    <form @submit.prevent="save">
+      <input type="text" name="" id="" v-model="newTodo">
+      <button type="submit">Save</button>
+    </form>
+    
   </div>
 </template>
 
@@ -24,6 +26,7 @@ export default {
   },
   data () {
     return {
+
       todos: [
         {
           text: 'Todo1',

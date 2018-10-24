@@ -1,11 +1,11 @@
 <template>
   <div id="app">
 
-    <SearchBox/>
+    <SearchBox @onSearchKeyChange="changeSearchKey"/>
 
-    <TodoList/>
+    <TodoList :todoSorted="todoSorted"/>
 
-    <AddForm/>
+    <AddForm :onSave="save"/>
     
   </div>
 </template>
@@ -21,11 +21,6 @@ export default {
     TodoList,
     SearchBox,
     AddForm
-  },
-  filters: {
-    capitalize (value) {
-      return value.toUpperCase()
-    } 
   },
   data () {
     return {
@@ -47,7 +42,6 @@ export default {
           completed: false
         }
       ],
-      newTodo: '',
       searchKey: ''
     }
   },
@@ -66,19 +60,13 @@ export default {
         .sort((a,b) => b.time - a.time)
     },
   },
-  watch: {
-    todos (current, old) {
-      console.log(current);
-      
-    }
-  },
   methods: {
-    async save () {
+    async save (newTodo) {
       let result = await this.$validator.validateAll() 
       if (!result) return
 
       let entry = {
-          text: this.newTodo,
+          text: newTodo,
           time: Math.round(Date.now() / 1000),
           completed: false
         }
@@ -86,9 +74,10 @@ export default {
       this.todos.push(entry)
 
       localStorage['todos'] = JSON.stringify(this.todos);
-
-      this.newTodo = ''
     },
+    changeSearchKey (key) {
+      this.searchKey = key
+    }
   }
 }
 </script>

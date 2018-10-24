@@ -9,7 +9,21 @@
 
 <script>
 export default {
-    name: 'SearchBox'
+    name: 'SearchBox',
+    props: {
+        onSearchKeyChange: Function
+    },
+    data () {
+        return {
+            searchKey: ''
+        }
+    },
+    watch: {
+        searchKey (val) {
+            // this.onSearchKeyChange(val)
+            this.$emit('onSearchKeyChange', val)
+        }
+    }
 }
 </script>
 

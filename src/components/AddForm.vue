@@ -10,7 +10,22 @@
 
 <script>
 export default {
-    name: 'AddForm'
+    name: 'AddForm',
+    props: {
+        onSave: Function
+    },
+    data () {
+        return {
+            newTodo: ''
+        }
+    },
+    methods: {
+        async save () {
+            let result = await this.$validator.validateAll() 
+            this.onSave(this.newTodo)
+            this.newTodo = ''
+        }
+    }
 }
 </script>
 

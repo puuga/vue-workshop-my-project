@@ -12,7 +12,15 @@
 
 <script>
 export default {
-    name: 'TodoList'
+    name: 'TodoList',
+    props: {
+        todoSorted: Array
+    },
+    filters: {
+        capitalize (value) {
+        return value.toUpperCase()
+        } 
+    },
 }
 </script>
 

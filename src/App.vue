@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <ul>
-      <li v-for="todo in todos" v-bind:key="todo.time">
-        {{ todo.text }}
+      <li :id="todo.time" v-for="todo in todos" :key="todo.time">
+        <span :class="{ 'green': todo.completed, 'red': !todo.completed }">
+          {{ todo.text | capitalize }}
+        </span>
       </li>
     </ul>
   </div>
@@ -11,6 +13,11 @@
 <script>
 export default {
   name: 'App',
+  filters: {
+    capitalize (value) {
+      return value.toUpperCase()
+    } 
+  },
   data () {
     return {
       todos: [
@@ -35,6 +42,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .red {
+    color: orangered;
+  }
+  .green {
+    color: green;
+  }
 </style>

@@ -1,24 +1,27 @@
 <template>
   <div id="app">
-    <ul>
-      <li :id="todo.time" v-for="todo in todos" :key="todo.time">
-        <span :class="{ 'green': todo.completed, 'red': !todo.completed }">
-          {{ todo.text | capitalize }}
-        </span>
-      </li>
-    </ul>
 
-    <form @submit.prevent="save">
-      <input type="text" name="" id="" v-model="newTodo">
-      <button type="submit">Save</button>
-    </form>
+    <SearchBox/>
+
+    <TodoList/>
+
+    <AddForm/>
     
   </div>
 </template>
 
 <script>
+import TodoList from './components/TodoList'
+import SearchBox from './components/SearchBox'
+import AddForm from './components/AddForm'
+
 export default {
   name: 'App',
+  components: {
+    TodoList,
+    SearchBox,
+    AddForm
+  },
   filters: {
     capitalize (value) {
       return value.toUpperCase()
@@ -44,11 +47,36 @@ export default {
           completed: false
         }
       ],
-      newTodo: ''
+      newTodo: '',
+      searchKey: ''
+    }
+  },
+  mounted () {
+    // load saved data from local storage
+    if (localStorage.todos) {
+      this.todos = JSON.parse(localStorage.todos)
+    } else {
+      this.todos = []
+    }
+  },
+  computed: {
+    todoSorted () {
+      return this.todos
+        .filter(todo => todo.text.toLowerCase().includes(this.searchKey.toLowerCase()))
+        .sort((a,b) => b.time - a.time)
+    },
+  },
+  watch: {
+    todos (current, old) {
+      console.log(current);
+      
     }
   },
   methods: {
-    save () {
+    async save () {
+      let result = await this.$validator.validateAll() 
+      if (!result) return
+
       let entry = {
           text: this.newTodo,
           time: Math.round(Date.now() / 1000),
@@ -56,6 +84,9 @@ export default {
         }
 
       this.todos.push(entry)
+
+      localStorage['todos'] = JSON.stringify(this.todos);
+
       this.newTodo = ''
     },
   }

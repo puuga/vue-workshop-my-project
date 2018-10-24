@@ -6,6 +6,8 @@ Vue.use(VeeValidate);
 
 Vue.config.productionTip = false
 
+Vue.prototype.$apiUrl = 'https://blog.skooldio.com/'
+
 new Vue({
   render: h => h(App)
 }).$mount('#app')

@@ -1,106 +1,64 @@
 <template>
-  <div id="app">
+    <div>
 
-    <AlertBar>
-      <template slot="title">
-        This is title.
-      </template>
-      <template slot="subtitle">
-        This is subtitle.
-      </template>
-    </AlertBar>
+        <!-- header -->
+        <Header/>
 
-    <SearchBox @onSearchKeyChange="changeSearchKey"/>
+        <!-- Loading -->
+        <div v-if="isLoadingPosts" class="loading">
+            <h1>Posts is coming...</h1>
+        </div>
 
-    <TodoList :todoSorted="todoSorted"/>
+        <!-- post list -->
+        <PostList :posts="posts"/>
 
-    <AddForm @onSave="save"/>
-    
-  </div>
+        <!-- footer -->
+
+    </div>
 </template>
 
 <script>
-import TodoList from './components/TodoList'
-import SearchBox from './components/SearchBox'
-import AddForm from './components/AddForm'
-import ConsoleMixin from './mixins/console'
-import AlertBar from './components/AlertBar'
+import Header from './components/Header'
+import PostList from './components/PostList'
 
 export default {
-  name: 'App',
-  components: {
-    TodoList,
-    SearchBox,
-    AddForm,
-    ConsoleMixin,
-    AlertBar
-  },
-  data () {
-    return {
-
-      todos: [
-        {
-          text: 'Todo1',
-          time: 1540352507,
-          completed: true
-        },
-        {
-          text: 'Todo2',
-          time: 1540352529,
-          completed: true
-        },
-        {
-          text: 'Todo3',
-          time: 1540352535,
-          completed: false
-        }
-      ],
-      searchKey: ''
-    }
-  },
-  // mixins: [ConsoleMixin],
-  mounted () {
-    // load saved data from local storage
-    if (localStorage.todos) {
-      this.todos = JSON.parse(localStorage.todos)
-    } else {
-      this.todos = []
-    }
-  },
-  computed: {
-    todoSorted () {
-      return this.todos
-        .filter(todo => todo.text.toLowerCase().includes(this.searchKey.toLowerCase()))
-        .sort((a,b) => b.time - a.time)
+    name: 'App',
+    components: {
+        Header,
+        PostList
     },
-  },
-  methods: {
-    async save (newTodo) {
-      let result = await this.$validator.validateAll() 
-      if (!result) return
-
-      let entry = {
-          text: newTodo,
-          time: Math.round(Date.now() / 1000),
-          completed: false
+    data () {
+        return {
+            posts: [],
+            isLoadingPosts: false
         }
-
-      this.todos.push(entry)
-
-      localStorage['todos'] = JSON.stringify(this.todos);
     },
-    changeSearchKey (key) {
-      this.searchKey = key
+    mounted () {
+        this.fetchSkooldioPosts()
+    },
+    methods: {
+        async fetchSkooldioPosts () {
+            try {
+                this.isLoadingPosts = true
+
+                let response = await fetch(`${this.$apiUrl}wp-json/wp/v2/posts`)
+                let posts = await response.json()
+                console.log('fetchSkooldioPosts', posts);
+
+                this.posts = posts
+                this.isLoadingPosts = false
+            } catch (error) {
+                this.isLoadingPosts = false
+            }
+            
+        }
     }
-  }
 }
 </script>
 
-<style scoped>
-  .red {
-    color: orangered;
-  }
-  .green {
-    color: green;
-  }
+<style>
+.loading {
+    margin-top: 2rem;
+    text-align: center;
+}
 </style>

@@ -7,6 +7,10 @@
         </span>
       </li>
     </ul>
+
+    <div>{{ newTodo }}</div>
+    <input type="text" name="" id="" v-model="newTodo" @keyup.enter="save()">
+    <button @click="save()">Save</button>
   </div>
 </template>
 
@@ -36,8 +40,21 @@ export default {
           time: 1540352535,
           completed: false
         }
-      ]
+      ],
+      newTodo: ''
     }
+  },
+  methods: {
+    save () {
+      let entry = {
+          text: this.newTodo,
+          time: Math.round(Date.now() / 1000),
+          completed: false
+        }
+
+      this.todos.push(entry)
+      this.newTodo = ''
+    },
   }
 }
 </script>
